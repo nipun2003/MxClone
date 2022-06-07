@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">MXClone</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="permission_rational">We need read storage permission, so that we can access the media files in your device and show you all video files available in your device.</string>
+    <string name="enable">Enable</string>
+    <string name="permission_permanent_deny">Read storage permission is permanently denied, to access media files in your device, we need storage permission.
+    Enable it by open app settings>permissions>allow_storage_permission.</string>
+    <string name="open_app_settings">Open App Setting</string>
+    <string name="folder">Folders</string>
+    <string name="whatsapp_video">WhatsApp Video</string>
+    <string name="_100_video">%d videos</string>
+    <string name="thumbnail">thumbnail</string>
+    <string name="_04_45">04:45</string>
+    <string name="hatim_15">Hatim_15</string>
+    <string name="refresh">Refresh</string>
+    <string name="delete">Delete</string>
+    <string name="rename">Rename</string>
+    <string name="rename_to">Rename To</string>
+    <string name="yes">YES</string>
+    <string name="cancel">CANCEL</string>
+    <string name="name_empty">Name should not be empty</string>
+    <string name="error_rename">Permission denied for renaming the video.</string>
+
+    <string name="file_deleted">%d file deleted successfully</string>
+    <string name="file_deleted_failed">No file deleted, permission denied.</string>
+    <string name="share">Share</string>
+    <string name="selected_item_text">"%d/%d "</string>
+    <string name="error_send_more_25">Can\'t send more than 25 files.</string>
+    <string name="properties">Properties</string>
+    <string name="ok">OK</string>
+    <string name="contains">Contains</string>
+    <string name="total_size">Total Size</string>
+    <string name="selected_item_size">%s(%s)</string>
+</resources>

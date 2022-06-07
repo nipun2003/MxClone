@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/small_spacing"
+    android:elevation="@dimen/extra_small_spacing"
+    app:cardBackgroundColor="?attr/colorOnSurface"
+    app:cardCornerRadius="@dimen/extra_small_spacing">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:orientation="vertical"
+        android:padding="@dimen/medium_spacing">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rename_to"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="@dimen/medium_text" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/small_spacing" />
+
+        <EditText
+            android:id="@+id/new_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/rename"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="?attr/colorOnPrimary"
+            android:textColorHint="@color/grey" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/small_spacing" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/small_spacing"
+                android:text="@string/yes"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:textSize="@dimen/small_text" />
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/medium_spacing"
+                android:layout_toStartOf="@id/yes"
+                android:padding="@dimen/small_spacing"
+                android:text="@string/cancel"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="@dimen/small_text" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

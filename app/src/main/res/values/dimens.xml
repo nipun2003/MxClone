@@ -1,0 +1,25 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="extra_small_spacing">4dp</dimen>
+    <dimen name="small_spacing">8dp</dimen>
+    <dimen name="medium_spacing">16dp</dimen>
+    <dimen name="large_spacing">24dp</dimen>
+    <dimen name="extra_large_spacing">32dp</dimen>
+    <dimen name="icon_size">50dp</dimen>
+    <dimen name="menu_item_space">40dp</dimen>
+    <dimen name="folder_name_width">100dp</dimen>
+    <dimen name="logo_size">70dp</dimen>
+    <dimen name="small_icon_size">35dp</dimen>
+    <dimen name="tiny_icon_size">20dp</dimen>
+    <dimen name="tiny_icon_2">16dp</dimen>
+    <dimen name="indicator_size" >20dp</dimen>
+    <dimen name="spacing_xxxlarge">55dp</dimen>
+
+    <dimen name="tiny_text">10sp</dimen>
+    <dimen name="extra_small_text">12sp</dimen>
+    <dimen name="small_text">16sp</dimen>
+    <dimen name="medium_text">18sp</dimen>
+    <dimen name="medium_text_2">20sp</dimen>
+    <dimen name="large_text">24sp</dimen>
+</resources>

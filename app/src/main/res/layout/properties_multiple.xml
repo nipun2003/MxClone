@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/small_spacing"
+    android:elevation="@dimen/extra_small_spacing"
+    app:cardBackgroundColor="?attr/colorOnSurface"
+    app:cardCornerRadius="@dimen/extra_small_spacing">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:orientation="vertical"
+        android:padding="@dimen/medium_spacing">
+
+        <TextView
+            android:layout_marginStart="@dimen/large_spacing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/properties"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="@dimen/medium_text" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/small_spacing" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contains"
+                android:textColor="@color/grey"/>
+            <Space
+                android:layout_width="@dimen/medium_spacing"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/video_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:text="@string/_100_video"/>
+        </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/small_spacing"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_size"
+                android:textColor="@color/grey"/>
+            <Space
+                android:layout_width="@dimen/medium_spacing"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/small_spacing" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/small_spacing"
+                android:text="@string/ok"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:textSize="@dimen/small_text" />
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
