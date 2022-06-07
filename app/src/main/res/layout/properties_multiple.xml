@@ -33,7 +33,8 @@
             android:gravity="start|center_vertical"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
                 android:layout_height="wrap_content"
                 android:text="@string/contains"
                 android:textColor="@color/grey"/>
@@ -42,7 +43,8 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/video_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey"
                 android:text="@string/_100_video"/>
@@ -56,7 +58,8 @@
             android:gravity="start|center_vertical"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
                 android:layout_height="wrap_content"
                 android:text="@string/total_size"
                 android:textColor="@color/grey"/>
@@ -65,7 +68,8 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/size"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey"/>
         </LinearLayout>

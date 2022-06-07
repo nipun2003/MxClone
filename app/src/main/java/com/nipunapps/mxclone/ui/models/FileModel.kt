@@ -10,7 +10,11 @@ data class FileModel(
     val duration : Long = 0L,
     val isSelected : Boolean = false,
     val id : Long = 0L,
-    val size : Long = 0L
+    val size : Long = 0L,
+    val dateCreated : Long,
+    val dateModified : Long,
+    val resolution : String,
+    val relativePath : String
 ){
     fun getContentUri() : Uri{
         return ContentUris.withAppendedId(

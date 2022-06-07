@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
+import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import com.nipunapps.mxclone.other.Resource
 import com.nipunapps.mxclone.ui.models.FileModel
@@ -77,7 +78,11 @@ class VideoRepository(
             MediaStore.Video.Media.DISPLAY_NAME,
             MediaStore.Video.Media.DURATION,
             MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.SIZE
+            MediaStore.Video.Media.SIZE,
+            MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.RESOLUTION,
+            MediaStore.Video.Media.RELATIVE_PATH,
+            MediaStore.Video.Media.DATE_MODIFIED
         )
         val selection = MediaStore.MediaColumns.BUCKET_ID + "=?"
         val selectionArg = arrayOf(bucketId)
@@ -94,12 +99,27 @@ class VideoRepository(
                         title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)),
                         duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)),
                         id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)),
-                        size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE))
+                        size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)),
+                        dateCreated = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED))?:0L,
+                        dateModified = cursor.getLongOrNull(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED))?:0L,
+                        relativePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RELATIVE_PATH)),
+                        resolution = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION))
                     )
                 )
             }
             emit(Resource.success(videos))
         } ?: emit(Resource.error("Something Went Wrong", emptyList()))
+    }
+
+    fun sendSingleFile(uri : Uri){
+        val mimeType = "video/*"
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_SUBJECT, "here are some files")
+            type = mimeType
+            putExtra(Intent.EXTRA_STREAM, uri)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(intent)
     }
 
     fun sendMultipleFiles(uris : List<Uri>){

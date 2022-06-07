@@ -81,6 +81,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun sendSingleFile(uri: Uri){
+        videoRepository.sendSingleFile(uri)
+    }
+
     fun getAllSelectedFileUri(): List<Uri> =
         fileList.value?.let { files ->
             files.filter { it.isSelected }.map { it.getContentUri() }

@@ -37,4 +37,13 @@
     <string name="contains">Contains</string>
     <string name="total_size">Total Size</string>
     <string name="selected_item_size">%s(%s)</string>
+    <string name="panchayat">panchayat_2</string>
+    <string name="file">File</string>
+    <string name="relative_path">Relative Path</string>
+    <string name="date_created">Date Created</string>
+    <string name="last_modified">Last Modified</string>
+    <string name="media">Media</string>
+    <string name="resolution">Resolution</string>
+    <string name="length">Length</string>
+    <string name="location">Location</string>
 </resources>

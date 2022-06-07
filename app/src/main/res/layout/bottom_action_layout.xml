@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
+    android:animateLayoutChanges="true"
     android:background="@drawable/bottom_action_bg"
     android:elevation="@dimen/extra_small_spacing">
     <LinearLayout

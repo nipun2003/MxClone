@@ -14,6 +14,7 @@
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_rename.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_rename_disable.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share__1.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share_disable.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/progress_bar.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/activity_main.xml" value="0.2490740740740741" />
@@ -24,10 +25,12 @@
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/fragment_first.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/fragment_home.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/fragment_second.xml" value="0.25677083333333334" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/more_option_bottom_sheet.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/permission_permanent_deny.xml" value="0.10885416666666667" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/properties_multiple.xml" value="0.24270833333333333" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/rational_layout.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/rename_layout.xml" value="0.25677083333333334" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/single_file_property.xml" value="0.24270833333333333" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/menu/long_press_menu.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/menu/menu_main.xml" value="0.25677083333333334" />
       </map>

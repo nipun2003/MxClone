@@ -17,23 +17,23 @@ class FileItemAdapter(
 ) : RecyclerView.Adapter<FileItemAdapter.ViewHolder>() {
 
     private var files = listOf<FileModel>()
-    private var onItemClickListener: ((Int,String) -> Unit)? = null
+    private var fileItemClickListener: FileItemClickListener? = null
 
-    private var onItemLongClickListener: ((Int) -> Boolean)? = null
+    private var showMore = true
+
+    fun hideShowMore(hideMore : Boolean){
+        this.showMore = !hideMore
+        notifyDataSetChanged()
+    }
+
+    fun setFileItemClickListener(fileItemClickListener: FileItemClickListener) {
+        this.fileItemClickListener = fileItemClickListener
+    }
 
 
     fun setFile(files: List<FileModel>) {
         this.files = files
         notifyDataSetChanged()
-    }
-
-
-    fun setOnItemLongClickListener(onItemLongClickListener: ((Int) -> Boolean)) {
-        this.onItemLongClickListener = onItemLongClickListener
-    }
-
-    fun setOnItemClickListener(onItemClickListener: (Int,String) -> Unit) {
-        this.onItemClickListener = onItemClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,18 +45,18 @@ class FileItemAdapter(
         with(holder) {
             binding.duration.text = file.duration.getDurationInFormat()
             binding.title.text = file.title
+            binding.more.isVisible = showMore
             Glide.with(context).asBitmap().load(Uri.fromFile(File(file.path)))
                 .into(binding.videoThumbnail)
             binding.selected.isVisible = file.isSelected
             binding.root.setOnClickListener {
-                onItemClickListener?.let { click->
-                    click(position,file.path)
-                }
+                fileItemClickListener?.onItemClick(position, file)
             }
             binding.root.setOnLongClickListener {
-                onItemLongClickListener?.let { longClick ->
-                    longClick(position)
-                } ?: false
+                fileItemClickListener?.onItemLongClick(position) ?: false
+            }
+            binding.more.setOnClickListener {
+                fileItemClickListener?.onMoreIconClick(file)
             }
         }
     }
