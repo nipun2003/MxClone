@@ -101,7 +101,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    fun getFolderList() {
+    private fun getFolderList() {
         viewModelScope.launch {
             _folderList.postValue(videoRepository.getAllFolders())
         }
@@ -111,8 +111,9 @@ class MainViewModel @Inject constructor(
         this.bucketId = bucketId
     }
 
+    fun getBucketId() : String = bucketId
+
     fun getAllVideoInsideFolder() {
-        Log.e("Nipun", "Inside viewmodel method")
         videoRepository.getAllVideoInsideFolder(bucketId = bucketId).onEach { result ->
             when (result.status) {
                 Status.SUCCESS -> {

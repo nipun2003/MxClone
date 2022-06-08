@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.MXClone" parent="Base.Theme.MXClone" />
+    <style name="Theme.Player" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>

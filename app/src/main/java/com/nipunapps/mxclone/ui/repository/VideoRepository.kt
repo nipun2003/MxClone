@@ -70,6 +70,30 @@ class VideoRepository(
         } ?: return emptyList()
     }
 
+    fun getFileFromUri(uri: Uri) : List<FileModel>{
+        val projection = arrayOf(
+            MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media.DISPLAY_NAME,
+            MediaStore.Video.Media.SIZE
+        )
+        val videoCursor = resolver.query(uri,projection,null,null,null)
+        videoCursor?.let { cursor ->
+            val videos = ArrayList<FileModel>()
+            while (cursor.moveToNext()) {
+                val path =
+                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))
+                videos.add(
+                    FileModel(
+                        path = path,
+                        title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)),
+                        size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)),
+                    )
+                )
+            }
+            return videos
+        }?:return emptyList()
+    }
+
     fun getAllVideoInsideFolder(bucketId: String): Flow<Resource<List<FileModel>>> = flow {
         emit(Resource.loading(null))
         val videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI

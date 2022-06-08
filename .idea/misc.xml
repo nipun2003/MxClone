@@ -4,10 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/bottom_action_bg.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_back_arrow.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_check.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_check_circle.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_close.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_delete.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_fb_10.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_ff_10.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_fill.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_fit.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_fit_height.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_fit_width.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_folder.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_info.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_more_vert.xml" value="0.1575" />
@@ -16,10 +23,17 @@
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share__1.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_share_disable.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_skip_next.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_skip_prev.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ic_zoom.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/progress_bar.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ripple_effect.xml" value="0.1575" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/drawable/ripple_effect_round.xml" value="0.1575" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/activity_main.xml" value="0.2490740740740741" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/activity_player.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/bottom_action_layout.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/content_main.xml" value="0.25677083333333334" />
+        <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/custom_player_control.xml" value="0.24270833333333333" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/file_item.xml" value="0.24270833333333333" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/folder_item.xml" value="0.25677083333333334" />
         <entry key="..\:/Android_Project/MXClone/app/src/main/res/layout/fragment_first.xml" value="0.25677083333333334" />

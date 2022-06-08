@@ -2,6 +2,7 @@ package com.nipunapps.mxclone.ui.fragments
 
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,6 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.nipunapps.mxclone.R
 import com.nipunapps.mxclone.databinding.*
 import com.nipunapps.mxclone.other.*
+import com.nipunapps.mxclone.other.Constants.BUCKET_ID
+import com.nipunapps.mxclone.other.Constants.POSITION
+import com.nipunapps.mxclone.ui.activity.PlayerActivity
 import com.nipunapps.mxclone.ui.adapters.FileItemAdapter
 import com.nipunapps.mxclone.ui.adapters.FileItemClickListener
 import com.nipunapps.mxclone.ui.adapters.GridSpacingDecoration
@@ -80,6 +84,11 @@ class SecondFragment : Fragment() {
                     mainViewModel.toggleSelection(pos)
                     return
                 }
+                val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
+                    putExtra(BUCKET_ID, mainViewModel.getBucketId())
+                    putExtra(POSITION, pos)
+                }
+                requireContext().startActivity(intent)
             }
 
             override fun onItemLongClick(pos: Int): Boolean {
@@ -127,13 +136,13 @@ class SecondFragment : Fragment() {
             duration = 200
             addTarget(view)
         }
-        TransitionManager.beginDelayedTransition(binding.root,transition)
+        TransitionManager.beginDelayedTransition(binding.root, transition)
         view.isVisible = show
     }
 
     private fun startActionMode() {
         selectionMode = count > 0
-        toggleBottomActionBar(count>0,bottomActionBinding.root)
+        toggleBottomActionBar(count > 0, bottomActionBinding.root)
         fileItemAdapter.hideShowMore(count > 0)
         binding.bottomAction.selectAllIcon.setImageResource(
             if (count == totalItem) R.drawable.ic_close else R.drawable.ic_check
