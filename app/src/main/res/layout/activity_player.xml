@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:background="@color/black"
         app:controller_layout_id="@layout/custom_player_control"
-        app:show_buffering="when_playing"/>
+        app:show_buffering="when_playing" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

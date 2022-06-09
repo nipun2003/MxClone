@@ -55,6 +55,12 @@ class HomeFragment : Fragment() {
         mainViewModel.folderList.observe(viewLifecycleOwner) { folders ->
             folderItemAdapter.setFolder(folders)
         }
+
+        mainViewModel.lastPlayback.observe(viewLifecycleOwner){lastPlayback->
+            if(lastPlayback.isNotEmpty()){
+                folderItemAdapter.setLastPlayFolder(lastPlayback[0].bucketId)
+            }
+        }
     }
 
 

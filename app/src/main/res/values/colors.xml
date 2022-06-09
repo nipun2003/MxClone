@@ -3,5 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#9F9B9B</color>
+    <color name="grey_3">#409F9B9B</color>
+    <color name="last_play_text">#2196F3</color>
     <color name="controller_bg">#80000000</color>
+    <color name="text_color">#000000</color>
+
 </resources>

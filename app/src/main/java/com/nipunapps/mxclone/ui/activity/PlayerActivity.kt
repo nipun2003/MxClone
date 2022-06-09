@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
@@ -16,10 +15,9 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.nipunapps.mxclone.R
 import com.nipunapps.mxclone.databinding.ActivityPlayerBinding
-import com.nipunapps.mxclone.databinding.CustomPlayerControlBinding
 import com.nipunapps.mxclone.other.Constants
 import com.nipunapps.mxclone.other.Constants.BUCKET_ID
-import com.nipunapps.mxclone.other.Constants.POSITION
+import com.nipunapps.mxclone.other.Constants.FILE_ID
 import com.nipunapps.mxclone.ui.models.FileModel
 import com.nipunapps.mxclone.ui.viewmodels.PlayerViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +28,10 @@ class PlayerActivity : AppCompatActivity() {
     private var _binding: ActivityPlayerBinding? = null
     private val binding get() = _binding!!
 
-    // Controller View
+    // player controller
     private lateinit var back: ImageView
-    private lateinit var more: ImageView
     private lateinit var scaleType: ImageView
+    private lateinit var more: ImageView
     private lateinit var title: TextView
 
 
@@ -49,6 +47,8 @@ class PlayerActivity : AppCompatActivity() {
     private var bucketId: String? = null
     private var filePlaying: FileModel? = null
     private var scale = 0
+    private var fileId: Long? = null
+    private var mediaFiles = emptyList<FileModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,10 +61,13 @@ class PlayerActivity : AppCompatActivity() {
             fromOffline = true
             return
         }
-        position = intent.extras?.getInt(POSITION) ?: 0
+        fileId = intent.extras?.getLong(FILE_ID)
         bucketId = intent.extras?.getString(BUCKET_ID)
         bucketId?.let { bId ->
             playerViewModel.initialiseFiles(bId)
+            fileId?.let { id ->
+                playerViewModel.setPositionWithMediaId(id)
+            }
         }
     }
 
@@ -98,13 +101,20 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun subscribeToObserver() {
         playerViewModel.fileList.observe(this) { files ->
+            mediaFiles = files
             exoPlayer?.let { player ->
-                files.forEach { file ->
+                files.forEachIndexed { index, file ->
+                    fileId?.let { id ->
+                        if (id == file.id) {
+                            position = index
+                        }
+                    }
                     val metaData = MediaMetadata.Builder()
                         .setTitle(file.title)
                         .build()
                     val mediaItem = MediaItem.Builder()
                         .setUri(Uri.parse(file.path))
+                        .setMediaId(file.id.toString())
                         .setMediaMetadata(metaData)
                         .build()
                     player.addMediaSource(
@@ -112,16 +122,18 @@ class PlayerActivity : AppCompatActivity() {
                             .createMediaSource(mediaItem)
                     )
                 }
-                player.prepare()
                 player.addListener(object : Player.Listener {
                     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                         super.onMediaItemTransition(mediaItem, reason)
                         title.text = mediaItem?.mediaMetadata?.title ?: ""
+                        mediaItem?.mediaId?.let { id ->
+                            playerViewModel.setLastPlayback(id.toLong())
+                        }
                     }
 
                     override fun onPlaybackStateChanged(playbackState: Int) {
                         super.onPlaybackStateChanged(playbackState)
-                        if(playbackState == ExoPlayer.STATE_ENDED){
+                        if (playbackState == ExoPlayer.STATE_ENDED) {
                             finish()
                         }
                     }
@@ -135,6 +147,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         playerViewModel.position.observe(this) { pos ->
+            if (pos == -1) return@observe
             filePlaying = playerViewModel.getCurrentFilePlaying(pos)
             filePlaying?.let { file ->
                 val width = file.resolution.takeWhile { it.isDigit() }.toInt()
@@ -147,6 +160,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
             playerViewModel.playbackPosition.observe(this) { playback ->
+                exoPlayer?.prepare()
                 exoPlayer?.seekTo(pos, playback)
             }
             playerViewModel.scaleType.observe(this) { scale ->

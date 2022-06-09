@@ -21,7 +21,7 @@ import com.nipunapps.mxclone.R
 import com.nipunapps.mxclone.databinding.*
 import com.nipunapps.mxclone.other.*
 import com.nipunapps.mxclone.other.Constants.BUCKET_ID
-import com.nipunapps.mxclone.other.Constants.POSITION
+import com.nipunapps.mxclone.other.Constants.FILE_ID
 import com.nipunapps.mxclone.ui.activity.PlayerActivity
 import com.nipunapps.mxclone.ui.adapters.FileItemAdapter
 import com.nipunapps.mxclone.ui.adapters.FileItemClickListener
@@ -86,7 +86,7 @@ class SecondFragment : Fragment() {
                 }
                 val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
                     putExtra(BUCKET_ID, mainViewModel.getBucketId())
-                    putExtra(POSITION, pos)
+                    putExtra(FILE_ID,fileModel.id)
                 }
                 requireContext().startActivity(intent)
             }
@@ -125,6 +125,14 @@ class SecondFragment : Fragment() {
         mainViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.fileRv.isVisible = !isLoading
             binding.progressCircular.isVisible = isLoading
+        }
+        mainViewModel.lastPlaybackInsideBucket.observe(viewLifecycleOwner){ lastPlaybacks->
+            if(lastPlaybacks.isNotEmpty()){
+                fileItemAdapter.setLastPlaybacks(lastPlaybacks,lastPlaybacks[0].mediaId)
+            }
+            if(lastPlaybacks.size > 1){
+                fileItemAdapter.setSecondLast(lastPlaybacks[1].mediaId)
+            }
         }
     }
 

@@ -23,6 +23,7 @@ import com.nipunapps.mxclone.R
 import com.nipunapps.mxclone.databinding.ActivityMainBinding
 import com.nipunapps.mxclone.databinding.PermissionPermanentDenyBinding
 import com.nipunapps.mxclone.databinding.RationalLayoutBinding
+import com.nipunapps.mxclone.other.Constants
 import com.nipunapps.mxclone.ui.repository.VideoRepository
 import com.nipunapps.mxclone.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -118,6 +119,15 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         mAppBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, mAppBarConfiguration)
+        binding.fab.setOnClickListener {
+            mainViewModel.getLastPlayMedia()?.let { last ->
+                val intent = Intent(this, PlayerActivity::class.java).apply {
+                    putExtra(Constants.BUCKET_ID, last.bucketId)
+                    putExtra(Constants.FILE_ID, last.mediaId)
+                }
+                startActivity(intent)
+            }
+        }
     }
 
     private fun subscribeToObserver() {

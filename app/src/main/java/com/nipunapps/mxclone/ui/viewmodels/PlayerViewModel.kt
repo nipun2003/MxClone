@@ -1,22 +1,26 @@
 package com.nipunapps.mxclone.ui.viewmodels
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
+import com.nipunapps.mxclone.database.helper.LastPlaybackHelper
 import com.nipunapps.mxclone.other.Status
 import com.nipunapps.mxclone.ui.models.FileModel
 import com.nipunapps.mxclone.ui.repository.VideoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
+    private val lastPlaybackHelper: LastPlaybackHelper
 ) : ViewModel() {
 
     private val _isStart = MutableLiveData<Boolean>(true)
@@ -27,7 +31,7 @@ class PlayerViewModel @Inject constructor(
 
 
     private var bucketId: String = ""
-    private val _position = MutableLiveData<Int>(0)
+    private val _position = MutableLiveData<Int>(-1)
     val position: LiveData<Int> = _position
 
     private val _scaleType = MutableLiveData<Int>(0)
@@ -50,6 +54,16 @@ class PlayerViewModel @Inject constructor(
             if (files.size <= pos) return null
             return files[pos]
         } ?: return null
+    }
+
+    fun setLastPlayback(mediaId : Long){
+        Log.e("Playback","Play -> $mediaId")
+        viewModelScope.launch {
+            lastPlaybackHelper.insertLastPlayback(
+                mediaId = mediaId,
+                bucketId = bucketId
+            )
+        }
     }
 
     fun initialiseFiles(bucketId: String = "", isOffline: Boolean = false, uri: Uri? = null) {
@@ -80,6 +94,22 @@ class PlayerViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun setPositionWithMediaId(id : Long) {
+        viewModelScope.launch {
+            lastPlaybackHelper.insertLastPlayback(
+                mediaId = id,
+                bucketId = bucketId
+            )
+        }
+        fileList.value?.let { files->
+            files.forEachIndexed { i, f ->
+                if(id == f.id){
+                    _position.postValue(i)
+                }
+            }
+        }
     }
 
     fun setPosition(pos: Int, playback: Long) {

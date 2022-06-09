@@ -6,6 +6,9 @@ object Constants {
 
     const val BUCKET_ID = "bucked_id"
     const val POSITION = "position"
+    const val FILE_ID = "file_Id"
+
+    const val LASTPLAYBACK_TABLE = "last_playback"
 
     val scaleMap = mapOf(
         0 to R.drawable.ic_fit_width,

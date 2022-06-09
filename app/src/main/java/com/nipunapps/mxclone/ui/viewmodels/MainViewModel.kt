@@ -1,11 +1,12 @@
 package com.nipunapps.mxclone.ui.viewmodels
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nipunapps.mxclone.database.entity.LastPlaybackTimeEntity
+import com.nipunapps.mxclone.database.helper.LastPlaybackHelper
 import com.nipunapps.mxclone.other.Status
 import com.nipunapps.mxclone.ui.models.FileModel
 import com.nipunapps.mxclone.ui.models.FolderModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
+    private val lastPlaybackHelper: LastPlaybackHelper
 ) : ViewModel() {
 
     private var bucketId: String = ""
@@ -36,6 +38,11 @@ class MainViewModel @Inject constructor(
     private val _fileList = MutableLiveData<List<FileModel>>(emptyList())
     val fileList: LiveData<List<FileModel>> = _fileList
 
+    private val _lastPlaybackInsideBucket = MutableLiveData<List<LastPlaybackTimeEntity>>(emptyList())
+    val lastPlaybackInsideBucket: LiveData<List<LastPlaybackTimeEntity>> = _lastPlaybackInsideBucket
+
+    private val _lastPlayback = MutableLiveData<List<LastPlaybackTimeEntity>>(emptyList())
+    val lastPlayback: LiveData<List<LastPlaybackTimeEntity>> = _lastPlayback
 
     fun refresh() {
         getFolderList()
@@ -81,7 +88,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun sendSingleFile(uri: Uri){
+    fun sendSingleFile(uri: Uri) {
         videoRepository.sendSingleFile(uri)
     }
 
@@ -103,35 +110,47 @@ class MainViewModel @Inject constructor(
 
     private fun getFolderList() {
         viewModelScope.launch {
+            _lastPlayback.postValue(lastPlaybackHelper.getAllLastPlayBack())
             _folderList.postValue(videoRepository.getAllFolders())
         }
+    }
+
+    fun getLastPlayMedia() : LastPlaybackTimeEntity?{
+        lastPlayback.value?.let { f->
+            if(f.isNotEmpty()) return f[0]
+            else return null
+        }
+        return null
     }
 
     fun setBucketId(bucketId: String) {
         this.bucketId = bucketId
     }
 
-    fun getBucketId() : String = bucketId
+    fun getBucketId(): String = bucketId
 
     fun getAllVideoInsideFolder() {
-        videoRepository.getAllVideoInsideFolder(bucketId = bucketId).onEach { result ->
-            when (result.status) {
-                Status.SUCCESS -> {
-                    _isLoading.postValue(false)
-                    _isError.postValue(false)
-                    _fileList.postValue(result.data ?: emptyList())
+        viewModelScope.launch {
+            videoRepository.getAllVideoInsideFolder(bucketId = bucketId).onEach { result ->
+                when (result.status) {
+                    Status.SUCCESS -> {
+                        _isLoading.postValue(false)
+                        _isError.postValue(false)
+                        _fileList.postValue(result.data ?: emptyList())
+                    }
+                    Status.LOADING -> {
+                        _isLoading.postValue(false)
+                        _isError.postValue(false)
+                        _fileList.postValue(emptyList())
+                    }
+                    Status.ERROR -> {
+                        _isError.postValue(true)
+                        _isLoading.postValue(false)
+                    }
                 }
-                Status.LOADING -> {
-                    _isLoading.postValue(false)
-                    _isError.postValue(false)
-                    _fileList.postValue(emptyList())
-                }
-                Status.ERROR -> {
-                    _isError.postValue(true)
-                    _isLoading.postValue(false)
-                }
-            }
-        }.launchIn(viewModelScope)
+            }.launchIn(this)
+            _lastPlaybackInsideBucket.postValue(lastPlaybackHelper.getLastPlaybackInsideBucket(bucketId = bucketId))
+        }
     }
 
 }
