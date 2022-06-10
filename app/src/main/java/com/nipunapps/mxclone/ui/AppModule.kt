@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.nipunapps.mxclone.database.PlaybackDatabase
+import com.nipunapps.mxclone.database.dao.DurationDao
 import com.nipunapps.mxclone.database.dao.LastPlaybackDao
 import com.nipunapps.mxclone.database.helper.LastPlaybackHelper
 import com.nipunapps.mxclone.ui.repository.VideoRepository
@@ -32,4 +33,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLastPlaybackHelper(playbackDatabase: PlaybackDatabase) : LastPlaybackHelper = LastPlaybackHelper(playbackDatabase.getLastPlaybackDao())
+
+    @Provides
+    @Singleton
+    fun provideLastPlayDurationDao(playbackDatabase: PlaybackDatabase) : DurationDao = playbackDatabase.getLastPlayDuration()
 }

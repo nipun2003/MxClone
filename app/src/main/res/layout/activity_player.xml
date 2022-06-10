@@ -15,5 +15,22 @@
         app:controller_layout_id="@layout/custom_player_control"
         app:show_buffering="when_playing" />
 
-
+    <FrameLayout
+        android:id="@+id/lock_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/open_lock"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:padding="@dimen/small_spacing"
+            android:src="@drawable/ic_lock_open"
+            android:layout_gravity="top|start"
+            android:background="@color/controller_bg"
+            android:layout_margin="@dimen/medium_spacing"/>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

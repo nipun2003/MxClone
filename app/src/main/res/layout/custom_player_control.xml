@@ -82,16 +82,16 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/large_spacing"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/exo_position"
             android:layout_marginHorizontal="@dimen/small_spacing"
-            android:layout_toStartOf="@id/exo_duration"/>
+            android:layout_toStartOf="@id/exo_duration"
+            android:layout_toEndOf="@id/exo_position" />
 
         <TextView
             android:id="@+id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/small_spacing"
             android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/small_spacing"
             android:textColor="@color/white"
             tools:text="03:28" />
     </RelativeLayout>
@@ -100,29 +100,35 @@
         android:id="@+id/controller_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_spacing"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="@dimen/small_spacing"
         android:padding="@dimen/small_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/lock_controller"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:padding="@dimen/small_spacing"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_lock" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/transparent"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/transparent"/>
+            android:background="@color/transparent" />
 
         <ImageButton
             android:id="@+id/exo_prev"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:padding="@dimen/small_spacing"
             android:scaleType="fitCenter"
@@ -131,8 +137,8 @@
         <ImageButton
             android:id="@+id/exo_rew"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:padding="@dimen/small_spacing"
             android:scaleType="fitCenter"
@@ -142,8 +148,8 @@
             android:id="@id/exo_play"
             style="@style/ExoMediaButton.Play"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:padding="@dimen/small_spacing"
             android:scaleType="fitCenter" />
 
@@ -151,15 +157,15 @@
             android:id="@id/exo_pause"
             style="@style/ExoMediaButton.Pause"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:padding="@dimen/small_spacing" />
 
         <ImageButton
             android:id="@+id/exo_ffwd"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:padding="@dimen/small_spacing"
             android:scaleType="fitCenter"
@@ -168,26 +174,47 @@
         <ImageButton
             android:id="@+id/exo_next"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:padding="@dimen/small_spacing"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_skip_next" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"
-            android:background="@color/transparent"/>
+            android:background="@color/transparent" />
+
         <ImageButton
             android:id="@+id/scaleType"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="@dimen/small_spacing"
+            android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:padding="@dimen/small_spacing"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_fit_width" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginEnd="@dimen/extra_large_spacing"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.nipunapps.mxclone.views.VerticalSeekBar
+            android:id="@+id/volume_seek"
+            android:layout_width="10dp"
+            android:layout_height="@dimen/seek_bar_height"
+            android:paddingHorizontal="@dimen/medium_spacing"
+            android:thumbTint="@color/transparent"
+            android:progressDrawable="@drawable/seekbar_bg"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

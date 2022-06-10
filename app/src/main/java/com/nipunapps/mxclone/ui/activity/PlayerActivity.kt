@@ -1,13 +1,18 @@
 package com.nipunapps.mxclone.ui.activity
 
 import android.content.pm.ActivityInfo
+import android.media.AudioManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatSeekBar
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
@@ -21,6 +26,9 @@ import com.nipunapps.mxclone.other.Constants.FILE_ID
 import com.nipunapps.mxclone.ui.models.FileModel
 import com.nipunapps.mxclone.ui.viewmodels.PlayerViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlayerActivity : AppCompatActivity() {
@@ -33,6 +41,8 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var scaleType: ImageView
     private lateinit var more: ImageView
     private lateinit var title: TextView
+    private lateinit var lock : ImageView
+    private lateinit var volumeSeek : AppCompatSeekBar
 
 
     private var exoPlayer: ExoPlayer? = null
@@ -49,11 +59,21 @@ class PlayerActivity : AppCompatActivity() {
     private var scale = 0
     private var fileId: Long? = null
     private var mediaFiles = emptyList<FileModel>()
+    private var lockMode = false
+    private lateinit var audioManager: AudioManager
+    private var currentVolume = 0
+
+    override fun onBackPressed() {
+        if(lockMode){
+            binding.lockSurface.performClick()
+        }else super.onBackPressed()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityPlayerBinding.inflate(layoutInflater)
         initialiseControllerView()
+        initialiseMediaSeek()
         setContentView(binding.root)
         val uri = intent.data
         uri?.let { u ->
@@ -76,13 +96,62 @@ class PlayerActivity : AppCompatActivity() {
         title = binding.player.findViewById(R.id.title)
         more = binding.player.findViewById(R.id.more)
         scaleType = binding.player.findViewById(R.id.scaleType)
+        lock = binding.player.findViewById(R.id.lock_controller)
         back.setOnClickListener { finish() }
+        lock.setOnClickListener {
+            binding.player.hideController()
+            lockMode = true
+            binding.lockSurface.isVisible = true
+            hideOpenLock()
+        }
+        binding.openLock.setOnClickListener {
+            binding.lockSurface.isVisible = false
+            lockMode = false
+            binding.player.showController()
+            job?.cancel()
+        }
         scaleType.setOnClickListener {
             playerViewModel.setScaleType(
                 if (scale == 4) 0 else scale + 1
             )
         }
+        binding.lockSurface.setOnClickListener {
+            binding.openLock.isVisible = true
+            hideOpenLock()
+        }
         AspectRatioFrameLayout.RESIZE_MODE_FILL
+    }
+
+    private fun initialiseMediaSeek(){
+        volumeSeek = binding.player.findViewById(R.id.volume_seek)
+        audioManager = getSystemService(AudioManager::class.java)
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        volumeSeek.max = maxVolume+1
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        volumeSeek.progress = currentVolume
+        volumeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,p1,0)
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+
+            }
+        })
+    }
+
+    private var job : Job? = null
+
+    private fun hideOpenLock(){
+        job?.cancel()
+        job = lifecycleScope.launch {
+            delay(3000)
+            binding.openLock.isVisible = false
+        }
     }
 
     override fun onStart() {
@@ -127,7 +196,8 @@ class PlayerActivity : AppCompatActivity() {
                         super.onMediaItemTransition(mediaItem, reason)
                         title.text = mediaItem?.mediaMetadata?.title ?: ""
                         mediaItem?.mediaId?.let { id ->
-                            playerViewModel.setLastPlayback(id.toLong())
+                            if (!fromOffline)
+                                playerViewModel.setLastPlayback(id.toLong())
                         }
                     }
 
@@ -152,6 +222,7 @@ class PlayerActivity : AppCompatActivity() {
             filePlaying?.let { file ->
                 val width = file.resolution.takeWhile { it.isDigit() }.toInt()
                 val height = file.resolution.takeLastWhile { it.isDigit() }.toInt()
+                playerViewModel.updatePlaybackPosition(file.id)
                 title.text = file.title
                 requestedOrientation = if (width > height) {
                     ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -183,8 +254,13 @@ class PlayerActivity : AppCompatActivity() {
             position = player.currentPeriodIndex
             currentPlaybackPosition = player.currentPosition
             playerViewModel.setPosition(position, currentPlaybackPosition)
+            setLastPlayDuration(position, currentPlaybackPosition)
             player.release()
         }
+    }
+
+    private fun setLastPlayDuration(pos: Int, duration: Long) {
+        playerViewModel.insertLastDuration(file = mediaFiles[pos], lastDuration = duration)
     }
 
 //    --------------------------LifeCycle Observer--------------------
@@ -201,11 +277,13 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,currentVolume,0)
         releasePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,currentVolume,0)
         releasePlayer()
     }
 }

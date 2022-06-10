@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
+import com.nipunapps.mxclone.database.dao.DurationDao
+import com.nipunapps.mxclone.database.entity.LastPlayDurationEntity
 import com.nipunapps.mxclone.database.helper.LastPlaybackHelper
 import com.nipunapps.mxclone.other.Status
 import com.nipunapps.mxclone.ui.models.FileModel
@@ -20,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val videoRepository: VideoRepository,
-    private val lastPlaybackHelper: LastPlaybackHelper
+    private val lastPlaybackHelper: LastPlaybackHelper,
+    private val durationDao: DurationDao
 ) : ViewModel() {
 
     private val _isStart = MutableLiveData<Boolean>(true)
@@ -56,8 +59,7 @@ class PlayerViewModel @Inject constructor(
         } ?: return null
     }
 
-    fun setLastPlayback(mediaId : Long){
-        Log.e("Playback","Play -> $mediaId")
+    fun setLastPlayback(mediaId: Long) {
         viewModelScope.launch {
             lastPlaybackHelper.insertLastPlayback(
                 mediaId = mediaId,
@@ -96,18 +98,48 @@ class PlayerViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun setPositionWithMediaId(id : Long) {
+    fun setPosition(pos: Int) {
+        viewModelScope.launch {
+            getCurrentFilePlaying(pos)?.let { file ->
+                updatePlaybackPosition(file.id)
+            }
+        }
+    }
+
+    fun setPositionWithMediaId(id: Long) {
         viewModelScope.launch {
             lastPlaybackHelper.insertLastPlayback(
                 mediaId = id,
                 bucketId = bucketId
             )
         }
-        fileList.value?.let { files->
+        fileList.value?.let { files ->
             files.forEachIndexed { i, f ->
-                if(id == f.id){
+                if (id == f.id) {
                     _position.postValue(i)
                 }
+            }
+        }
+    }
+
+    fun insertLastDuration(
+        file: FileModel,
+        lastDuration: Long
+    ) {
+        viewModelScope.launch {
+            durationDao.insertLastDuration(
+                LastPlayDurationEntity(
+                    file.id,
+                    if(file.duration - lastDuration <= 10000) 0L else lastDuration
+                )
+            )
+        }
+    }
+
+    fun updatePlaybackPosition(mediaId: Long) {
+        viewModelScope.launch {
+            durationDao.getLastPlayDuration(mediaId)?.let { last ->
+                _playBackPosition.postValue(last.lastDuration)
             }
         }
     }

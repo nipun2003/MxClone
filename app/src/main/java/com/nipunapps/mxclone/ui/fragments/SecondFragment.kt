@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.nipunapps.mxclone.R
+import com.nipunapps.mxclone.database.entity.LastPlaybackTimeEntity
 import com.nipunapps.mxclone.databinding.*
 import com.nipunapps.mxclone.other.*
 import com.nipunapps.mxclone.other.Constants.BUCKET_ID
@@ -54,6 +56,7 @@ class SecondFragment : Fragment() {
     private lateinit var alertDialogue: AlertDialog
     private var count = 0
     private var totalItem = 0
+    private var lastPlaybackItem: LastPlaybackTimeEntity? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +74,26 @@ class SecondFragment : Fragment() {
         binding.fileRv.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.fileRv.addItemDecoration(GridSpacingDecoration(2, 70, true))
         subscribeToObserver()
+        binding.fileRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy < 0) {
+                    binding.fab.isVisible = false
+                }
+                if (dy > 10) {
+                    binding.fab.isVisible = true
+                }
+            }
+        })
+        binding.fab.setOnClickListener {
+            lastPlaybackItem?.let { last ->
+                val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
+                    putExtra(Constants.BUCKET_ID, last.bucketId)
+                    putExtra(Constants.FILE_ID, last.mediaId)
+                }
+                startActivity(intent)
+            }
+        }
         return binding.root
 
     }
@@ -86,7 +109,7 @@ class SecondFragment : Fragment() {
                 }
                 val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
                     putExtra(BUCKET_ID, mainViewModel.getBucketId())
-                    putExtra(FILE_ID,fileModel.id)
+                    putExtra(FILE_ID, fileModel.id)
                 }
                 requireContext().startActivity(intent)
             }
@@ -126,11 +149,15 @@ class SecondFragment : Fragment() {
             binding.fileRv.isVisible = !isLoading
             binding.progressCircular.isVisible = isLoading
         }
-        mainViewModel.lastPlaybackInsideBucket.observe(viewLifecycleOwner){ lastPlaybacks->
-            if(lastPlaybacks.isNotEmpty()){
-                fileItemAdapter.setLastPlaybacks(lastPlaybacks,lastPlaybacks[0].mediaId)
+        mainViewModel.lastPlaybackInsideBucket.observe(viewLifecycleOwner) { lastPlaybacks ->
+            if (lastPlaybacks.isNotEmpty()) {
+                lastPlaybackItem = lastPlaybacks[0]
+                fileItemAdapter.setLastPlaybacks(lastPlaybacks, lastPlaybacks[0].mediaId)
+                binding.fab.isVisible = true
+            }else{
+                binding.fab.isVisible = false
             }
-            if(lastPlaybacks.size > 1){
+            if (lastPlaybacks.size > 1) {
                 fileItemAdapter.setSecondLast(lastPlaybacks[1].mediaId)
             }
         }
