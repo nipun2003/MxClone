@@ -1,11 +1,15 @@
 package com.nipunapps.mxclone.ui.activity
 
+import android.app.PictureInPictureParams
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.Rational
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -41,8 +45,9 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var scaleType: ImageView
     private lateinit var more: ImageView
     private lateinit var title: TextView
-    private lateinit var lock : ImageView
-    private lateinit var volumeSeek : AppCompatSeekBar
+    private lateinit var lock: ImageView
+    private lateinit var pipMode: ImageView
+    private lateinit var volumeSeek: AppCompatSeekBar
 
 
     private var exoPlayer: ExoPlayer? = null
@@ -64,9 +69,9 @@ class PlayerActivity : AppCompatActivity() {
     private var currentVolume = 0
 
     override fun onBackPressed() {
-        if(lockMode){
+        if (lockMode) {
             binding.lockSurface.performClick()
-        }else super.onBackPressed()
+        } else super.onBackPressed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,12 +96,24 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { newIntent ->
+            finish()
+            startActivity(newIntent)
+        }
+    }
+
     private fun initialiseControllerView() {
         back = binding.player.findViewById(R.id.back)
         title = binding.player.findViewById(R.id.title)
         more = binding.player.findViewById(R.id.more)
         scaleType = binding.player.findViewById(R.id.scaleType)
         lock = binding.player.findViewById(R.id.lock_controller)
+        pipMode = binding.player.findViewById(R.id.pipMode)
+        pipMode.setOnClickListener {
+            goIntoPipMode()
+        }
         back.setOnClickListener { finish() }
         lock.setOnClickListener {
             binding.player.hideController()
@@ -122,16 +139,16 @@ class PlayerActivity : AppCompatActivity() {
         AspectRatioFrameLayout.RESIZE_MODE_FILL
     }
 
-    private fun initialiseMediaSeek(){
+    private fun initialiseMediaSeek() {
         volumeSeek = binding.player.findViewById(R.id.volume_seek)
         audioManager = getSystemService(AudioManager::class.java)
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        volumeSeek.max = maxVolume+1
+        volumeSeek.max = maxVolume + 1
         currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         volumeSeek.progress = currentVolume
-        volumeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        volumeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,p1,0)
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, p1, 0)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -144,9 +161,9 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
-    private var job : Job? = null
+    private var job: Job? = null
 
-    private fun hideOpenLock(){
+    private fun hideOpenLock() {
         job?.cancel()
         job = lifecycleScope.launch {
             delay(3000)
@@ -267,23 +284,52 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        exoPlayer?.pause()
+        if (!isInPictureInPictureMode)
+            exoPlayer?.playWhenReady = false
+    }
+
+    override fun onUserLeaveHint() {
+        goIntoPipMode()
+    }
+
+    private fun goIntoPipMode(){
+        exoPlayer?.let {
+            releasePlayer()
+            binding.player.useController = false
+            val aspectRation = Rational(binding.player.width, binding.player.height)
+            val params = PictureInPictureParams.Builder()
+                .setAspectRatio(aspectRation)
+                .build()
+            enterPictureInPictureMode(params)
+            binding.player.hideController()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        exoPlayer?.play()
+        exoPlayer?.playWhenReady = true
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration?
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if(isInPictureInPictureMode){
+            binding.player.hideController()
+        }else binding.player.showController()
+        binding.player.useController = !isInPictureInPictureMode
     }
 
     override fun onStop() {
         super.onStop()
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,currentVolume,0)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0)
         releasePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,currentVolume,0)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0)
         releasePlayer()
     }
 }

@@ -123,6 +123,11 @@
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="@color/transparent" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/transparent" />
 
         <ImageButton
             android:id="@+id/exo_prev"
@@ -186,6 +191,17 @@
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="@color/transparent" />
+
+        <ImageButton
+            android:id="@+id/pipMode"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="@dimen/small_spacing"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:padding="@dimen/small_spacing"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_pip" />
 
         <ImageButton
             android:id="@+id/scaleType"

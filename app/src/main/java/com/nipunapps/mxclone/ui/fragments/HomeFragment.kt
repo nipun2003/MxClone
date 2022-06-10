@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.nipunapps.mxclone.R
 import com.nipunapps.mxclone.databinding.FragmentHomeBinding
 import com.nipunapps.mxclone.other.Constants
@@ -24,7 +25,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private lateinit var mainViewModel: MainViewModel
     private lateinit var folderItemAdapter: FolderItemAdapter
-    private var actionMode : ActionMode? = null
+    private var shouldNotShowFab = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -50,6 +51,17 @@ class HomeFragment : Fragment() {
                 startActivity(intent)
             }
         }
+        binding.folderRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy < 0) {
+                    binding.fab.isVisible = false
+                }
+                if (dy > 10 && !shouldNotShowFab) {
+                    binding.fab.isVisible = true
+                }
+            }
+        })
         return binding.root
 
     }
@@ -73,7 +85,9 @@ class HomeFragment : Fragment() {
             if(lastPlayback.isNotEmpty()){
                 folderItemAdapter.setLastPlayFolder(lastPlayback[0].bucketId)
                 binding.fab.isVisible = true
+                shouldNotShowFab = false
             }else{
+                shouldNotShowFab = true
                 binding.fab.isVisible = false
             }
         }

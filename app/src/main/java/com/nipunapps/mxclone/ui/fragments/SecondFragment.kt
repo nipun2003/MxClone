@@ -57,6 +57,7 @@ class SecondFragment : Fragment() {
     private var count = 0
     private var totalItem = 0
     private var lastPlaybackItem: LastPlaybackTimeEntity? = null
+    private var shouldNotShowFab = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,7 +81,7 @@ class SecondFragment : Fragment() {
                 if (dy < 0) {
                     binding.fab.isVisible = false
                 }
-                if (dy > 10) {
+                if (dy > 10 && !shouldNotShowFab) {
                     binding.fab.isVisible = true
                 }
             }
@@ -154,7 +155,9 @@ class SecondFragment : Fragment() {
                 lastPlaybackItem = lastPlaybacks[0]
                 fileItemAdapter.setLastPlaybacks(lastPlaybacks, lastPlaybacks[0].mediaId)
                 binding.fab.isVisible = true
+                shouldNotShowFab = false
             }else{
+                shouldNotShowFab = true
                 binding.fab.isVisible = false
             }
             if (lastPlaybacks.size > 1) {
